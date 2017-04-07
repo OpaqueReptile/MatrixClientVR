@@ -19,6 +19,10 @@ public class MatrixSessionEngine : MonoBehaviour
         MatrixSessionInfo.LoginType = "m.login.password";
         StartCoroutine(MatrixREST("_matrix/client/r0/login", "POST", new LoginInfo(), new LoginResponse()));
     }
+    //get the server's room directory
+    public void MatrixRooms() {
+        StartCoroutine(MatrixREST("_matrix/client/r0/publicRooms", "GET", null, new DirectoryResponse()));
+    }
 
     //generic handler for any REST endpoint
     IEnumerator MatrixREST(string URL, string method, MatrixJSON data, MatrixResponse response)
@@ -32,22 +36,22 @@ public class MatrixSessionEngine : MonoBehaviour
             request = new WWW(MatrixSessionInfo.HomeServer + URL, dataToSend, postHeader);
         }
         else{
-            request = new WWW(MatrixSessionInfo.HomeServer + URL, dataToSend);
+            request = new WWW(MatrixSessionInfo.HomeServer + URL);
         }
         yield return request;
         if (request.error != null)
         {
             Debug.Log("request error: " + request.error);
+            response.Error();
         }
         else
         {
             Debug.Log("request success");
             Debug.Log("returned data" + request.text);
+            //write the endpoint response, if there is one, into the response object
+            JsonUtility.FromJsonOverwrite(request.text, response);
+            //The response object will then populate the MatrixSessionInfo static values
+            response.Save();
         }
-        //write the endpoint response, if there is one, into the response object
-        JsonUtility.FromJsonOverwrite(request.text, response);
-        //The response object will then populate the MatrixSessionInfo static values
-        response.Save();
-
     }
 }

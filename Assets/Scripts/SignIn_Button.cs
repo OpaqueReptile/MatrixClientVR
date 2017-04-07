@@ -3,18 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SignIn_Button_test : MonoBehaviour {
+public class SignIn_Button : MonoBehaviour {
 
     public MatrixSessionEngine Manager;
 
 	// Use this for initialization
 	void Start () {
+        onClick();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	}
-
+        if (MatrixSessionInfo.UserId.Length > 0)
+        {
+            Button button = gameObject.GetComponent<Button>();
+            ColorBlock cb = button.colors;
+            cb.normalColor = Color.green;
+            button.colors = cb;
+        }
+        else if(MatrixSessionInfo.LoginError == true)
+        {
+            Button button = gameObject.GetComponent<Button>();
+            ColorBlock cb = button.colors;
+            cb.normalColor = Color.red;
+            button.colors = cb;
+        }
+        else
+        {
+            Button button = gameObject.GetComponent<Button>();
+            ColorBlock cb = button.colors;
+            cb.normalColor = Color.white;
+            button.colors = cb;
+        }
+    }
     void onClick() {
         var canv = transform.parent.gameObject;
         print(canv);
@@ -38,5 +59,6 @@ public class SignIn_Button_test : MonoBehaviour {
             }
         }
         Manager.MatrixLogin();
+        Manager.MatrixRooms();
     }
 }

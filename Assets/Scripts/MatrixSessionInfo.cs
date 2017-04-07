@@ -10,10 +10,21 @@ using System.Collections;
 
 public static class MatrixSessionInfo
 {
-    private static string user, password, login_type;
-    private static string user_id, access_token, home_server;
+    //Matrix API values
+    //login
+    private static string user = "", password = "", login_type = "";
+    private static string user_id = "", access_token = "", home_server = "";
+    //publicRooms
+    private static int total_room_count_estimate;
+    private static string next_batch;
+    private static RoomChunk[] chunk;
 
-    //functions for getting static values
+    //API Error Status
+    //login
+    private static bool login_error = false; 
+
+    //functions for getting and setting static values
+    //login
     public static string Username
     {
         get
@@ -80,25 +91,74 @@ public static class MatrixSessionInfo
             home_server = value;
         }
     }
+    //publicRooms
+    public static int TotalRoomCountEstimate
+    {
+        get
+        {
+            return total_room_count_estimate;
+        }
+        set
+        {
+            total_room_count_estimate = value;
+        }
+    }
+    public static string NextBatch
+    {
+        get
+        {
+            return next_batch;
+        }
+        set
+        {
+            next_batch = value;
+        }
+    }
+    public static RoomChunk[] Chunk
+    {
+        get
+        {
+            return chunk;
+        }
+        set
+        {
+            chunk = value;
+        }
+    }
+    //error values
+    public static bool LoginError
+    {
+        get
+        {
+            return login_error;
+        }
+        set
+        {
+            login_error = value;
+        }
+    }
 }
 
+//interfaces for endpoints
 interface MatrixJSON
 {
 
 }
-
 interface MatrixResponse
 {
-     void Save();
+    void Save();
+    void Error();
 }
 
+//login endpoint
+[System.Serializable]
 public class LoginInfo : MatrixJSON
 {
     public string type = MatrixSessionInfo.LoginType;
     public string user = MatrixSessionInfo.Username;
     public string password = MatrixSessionInfo.Password;
 }
-
+[System.Serializable]
 public class LoginResponse : MatrixResponse
 {
     public string user_id;
@@ -110,6 +170,73 @@ public class LoginResponse : MatrixResponse
         MatrixSessionInfo.UserId = user_id;
         MatrixSessionInfo.AccessToken = access_token;
         MatrixSessionInfo.HomeServer = home_server;
+        MatrixSessionInfo.LoginError = false;
+    }
+    public void Error()
+    {
+        MatrixSessionInfo.LoginError = true;
     }
 }
 
+//Directory of Public Rooms endpoint
+[System.Serializable]
+public class DirectoryResponse : MatrixResponse{
+    public int total_room_count_estimate;
+    public string next_batch;
+    public RoomChunk[] chunk;
+
+    public void Save() {
+        MatrixSessionInfo.TotalRoomCountEstimate = total_room_count_estimate;
+        MatrixSessionInfo.NextBatch = next_batch;
+        MatrixSessionInfo.Chunk = chunk;
+    }
+    public void Error() {
+
+    }
+}
+[System.Serializable]
+public class RoomChunk{
+    public bool world_readable;
+    public string topic;
+    public int num_joined_members;
+    public string avatar_url;
+    public string room_id;
+    public bool guest_can_join;
+    public string[] aliases;
+    public string name;
+
+}
+
+/*
+public class RoomChunk : MatrixResponse {
+    public bool world_readable;
+    public string topic;
+    public int num_joined_members;
+    public string avatar_url;
+    public string room_id;
+    public bool guest_can_join;
+    public Aliases[] aliases;
+    public string name;
+
+    public void Save()
+    {
+
+    }
+    public void Error()
+    {
+
+    }
+}
+public class Aliases : MatrixResponse {
+    public string name;
+
+    public void Save()
+    {
+
+    }
+    public void Error()
+    {
+
+    }
+}
+*/
