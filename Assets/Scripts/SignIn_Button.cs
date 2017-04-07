@@ -60,5 +60,16 @@ public class SignIn_Button : MonoBehaviour {
         }
         Manager.MatrixLogin();
         Manager.MatrixRooms();
+        StartCoroutine(testmsg());
+    }
+
+    IEnumerator testmsg()
+    {
+        yield return new WaitForSeconds(5);
+        Manager.MatrixJoinRoom("#shitpost:inferiorlattice.com");
+        yield return new WaitForSeconds(5);
+        Manager.MatrixMessage("!GyMcfzdsnhYfYaQeCu:inferiorlattice.com", "Posting");
+        Manager.MatrixMessage("!GyMcfzdsnhYfYaQeCu:inferiorlattice.com", "Multiple");
+        Manager.MatrixMessage("!GyMcfzdsnhYfYaQeCu:inferiorlattice.com", "TestMessages");
     }
 }

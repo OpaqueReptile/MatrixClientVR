@@ -16,9 +16,15 @@ public static class MatrixSessionInfo
     private static string user_id = "", access_token = "", home_server = "";
     //publicRooms
     private static int total_room_count_estimate;
-    private static string next_batch;
+    private static string next_batch = "";
     private static RoomChunk[] chunk;
-
+    //send event
+    public static string roomId = "";
+    public static string eventType = "";
+    public static string txnId = "0";
+    public static string eventId = "";
+    //join room
+    private static string roomIdOrAlias = "";
     //API Error Status
     //login
     private static bool login_error = false; 
@@ -125,6 +131,63 @@ public static class MatrixSessionInfo
             chunk = value;
         }
     }
+    //sending events
+    public static string RoomId
+    {
+        get
+        {
+            return roomId;
+        }
+        set
+        {
+            roomId = value;
+        }
+    }
+    public static string EventType
+    {
+        get
+        {
+            return eventType;
+        }
+        set
+        {
+            eventType = value;
+        }
+    }
+    public static string TxnId
+    {
+        get
+        {
+            return txnId;
+        }
+        set
+        {
+            txnId = value;
+        }
+    }
+    public static string EventId
+    {
+        get
+        {
+            return eventId;
+        }
+        set
+        {
+            eventId = value;
+        }
+    }
+    //joining rooms
+    public static string RoomIdOrAlias
+    {
+        get
+        {
+            return roomIdOrAlias;
+        }
+        set
+        {
+            eventId = roomIdOrAlias;
+        }
+    }
     //error values
     public static bool LoginError
     {
@@ -169,7 +232,7 @@ public class LoginResponse : MatrixResponse
     {
         MatrixSessionInfo.UserId = user_id;
         MatrixSessionInfo.AccessToken = access_token;
-        MatrixSessionInfo.HomeServer = home_server;
+        //MatrixSessionInfo.HomeServer = home_server;
         MatrixSessionInfo.LoginError = false;
     }
     public void Error()
@@ -207,36 +270,27 @@ public class RoomChunk{
 
 }
 
-/*
-public class RoomChunk : MatrixResponse {
-    public bool world_readable;
-    public string topic;
-    public int num_joined_members;
-    public string avatar_url;
-    public string room_id;
-    public bool guest_can_join;
-    public Aliases[] aliases;
-    public string name;
-
-    public void Save()
-    {
-
-    }
-    public void Error()
-    {
-
-    }
+//send event endpoint
+[System.Serializable]
+public class SendEvent : MatrixJSON{
+    public string roomId;
+    public string eventType;
+    public string txnId;
+    public EventBody body;
 }
-public class Aliases : MatrixResponse {
-    public string name;
-
-    public void Save()
-    {
-
-    }
-    public void Error()
-    {
-
-    }
+[System.Serializable]
+public class EventBody : MatrixJSON {
+    public string msgtype;
+    public string body;
 }
-*/
+[System.Serializable]
+public class SendEventResponse : MatrixResponse {
+    public string event_id;
+    public void Save() { }
+    public void Error() { }
+}
+
+//join room endpoint
+public class JoinRoom : MatrixJSON {
+    public string roomId;
+}
