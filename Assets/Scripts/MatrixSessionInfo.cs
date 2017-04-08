@@ -200,6 +200,35 @@ public static class MatrixSessionInfo
             login_error = value;
         }
     }
+
+
+    //non-MatrixAPI, VR specific
+    //privates
+    private static string vr_room_url;
+    private static string vr_room_port;
+    //public get/set
+    public static string VRRoomURL
+    {
+        get
+        {
+            return vr_room_url;
+        }
+        set
+        {
+            vr_room_url = value;
+        }
+    }
+    public static int VRRoomPort
+    {
+        get
+        {
+            return vr_room_port;
+        }
+        set
+        {
+            vr_room_port = value;
+        }
+    }
 }
 
 //interfaces for endpoints
