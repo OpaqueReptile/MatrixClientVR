@@ -4,6 +4,18 @@ using System.Text;
 using System.IO;
 using System;
 
+/**
+ *  To Run as a headless server - 
+ *  1) Disable the VR CameraRig object
+ *  2) Check "Is Server" on this script 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ **/
+
 public class NetworkSetup : MonoBehaviour {
     public bool isServer = true;
 	// Use this for initialization
@@ -17,15 +29,22 @@ public class NetworkSetup : MonoBehaviour {
             string pwd = Application.dataPath;
             string port = Load(Path.Combine(pwd, "port.ini"));
             string name = Load(Path.Combine(pwd, "name.ini"));
+            print(pwd);
+            print(port);
+            print(name);
             man.networkPort = Int32.Parse(port);
             man.serverBindToIP = true;
-            man.serverBindAddress = "name";
-            man.StartHost();
+            //man.serverBindAddress = name;
+            man.StopServer();
+            NetworkServer.Reset();
+            man.StartServer();
         }
        else {
             //get server from matrix service
-            man.networkAddress = MatrixSessionInfo.VRRoomURL;
-            man.networkPort = MatrixSessionInfo.VRRoomPort;
+            //man.networkAddress = MatrixSessionInfo.VRRoomURL;
+            //man.networkPort = MatrixSessionInfo.VRRoomPort;
+            man.networkAddress = "inferiorlattice.com";
+            man.networkPort = 4515;
             man.StartClient();
         }
 	}

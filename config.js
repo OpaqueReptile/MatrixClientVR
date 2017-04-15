@@ -7353,3 +7353,16 @@
     "changed": []
   }
 }
+
+{ 
+    "room":
+    {
+        "timeline":{"limit":1}, 
+        "state":{ "types": ["m.room.member"], "limit": 1},
+        "ephemeral":{"limit": 0},
+    },
+    
+    "event_fields" : ["none"],
+    "account_data" : {"types" : ["none"]},
+    "presence" : {"types" : ["none"], "not_types": ["*"]}
+}

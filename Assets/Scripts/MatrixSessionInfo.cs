@@ -205,7 +205,7 @@ public static class MatrixSessionInfo
     //non-MatrixAPI, VR specific
     //privates
     private static string vr_room_url;
-    private static string vr_room_port;
+    private static int vr_room_port;
     //public get/set
     public static string VRRoomURL
     {
